@@ -1,7 +1,8 @@
-#include <iostream>
+#include <QCoreApplication>
 
-int main ()
+int main(int argc, char *argv[])
 {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    QCoreApplication a(argc, argv);
+
+    return a.exec();
 }
