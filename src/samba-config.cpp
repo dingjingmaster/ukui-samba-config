@@ -73,7 +73,9 @@ bool SambaConfigPrivate::userInSambaGroup()
         return false;
     }
 
-    return QProcess::execute("groups", QStringList()<<mUserName << "|" << "grep" << "sambashare") ? false : true;
+    g_autofree gchar* cmd = g_strdup_printf ("groups %s | grep sambashare", mUserName.toUtf8().constData());
+
+    return QProcess::execute(cmd, QStringList()) ? false : true;
 }
 
 bool SambaConfigPrivate::addUserToSambaGroup()
