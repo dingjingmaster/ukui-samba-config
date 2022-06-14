@@ -93,14 +93,6 @@ bool SambaConfigPrivate::setUserPasswd(const QString &pass)
 
     qDebug() << "username:" << mUserName << " change passwd!";
 
-//    const QString pwd = QString("%1\n").arg(pass);
-//    const QString cmd = QString (""
-//                                 "spawn smbpasswd -a %1;"
-//                                 "expect \"*New SMB password*\"; send %2;"
-//                                 "expect \"*Retype new SMB password*\"; send %3;"
-//                                 "expect eof; exit"
-//                                 "").arg(mUserName).arg(pwd).arg(pwd);
-
     g_autofree gchar* cmd = g_strdup_printf ("spawn smbpasswd -a \"%s\";"
                                              "expect \"*New SMB password*\"; send \"%s\\n\";"
                                              "expect \"*Retype new SMB password*\"; send \"%s\\n\";"
@@ -108,9 +100,7 @@ bool SambaConfigPrivate::setUserPasswd(const QString &pass)
                                              pass.toUtf8().constData(), pass.toUtf8().constData());
 
 
-    qDebug() << cmd;
     QProcess::execute("expect", QStringList() << "-c" << cmd);
-
 
     return userInSamba();
 }
