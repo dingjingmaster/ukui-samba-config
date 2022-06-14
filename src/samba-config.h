@@ -13,10 +13,9 @@ public:
     const static SambaConfig* getInstance ();
 
 private:
-    SambaConfig(SambaConfig&) = delete;
+    SambaConfig(SambaConfig&){};
     ~SambaConfig(){};
     explicit SambaConfig(QObject *parent = nullptr);
-    SambaConfig& operator= (const SambaConfig&) = delete;
 
 public Q_SLOTS:
     bool init (QString name, int pid, int uid);

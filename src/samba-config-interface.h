@@ -36,6 +36,18 @@ public:
     ~SambaConfigInterface();
 
 public Q_SLOTS: // METHODS
+    inline QDBusPendingReply<bool> launchSmbd()
+    {
+        QList<QVariant> argumentList;
+        return asyncCallWithArgumentList(QStringLiteral("launchSmbd"), argumentList);
+    }
+
+    inline QDBusPendingReply<bool> finished()
+    {
+        QList<QVariant> argumentList;
+        return asyncCallWithArgumentList(QStringLiteral("finished"), argumentList);
+    }
+
     inline QDBusPendingReply<bool> addUserInGroup()
     {
         QList<QVariant> argumentList;

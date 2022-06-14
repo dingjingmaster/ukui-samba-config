@@ -10,7 +10,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(PkgConfig)
@@ -27,7 +27,7 @@ add_executable(peony-samba-service
 )
 target_link_libraries(peony-samba-service Qt5::Core Qt5::DBus ${Polkit_LIBRARIES} ${GIO_LIBRARIES})
 target_include_directories(peony-samba-service PUBLIC ${QT_INCLUDE_DIRS} ${Polkit_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS})
-install (TARGETS peony-samba-service DESTINATION bin)
+install (TARGETS peony-samba-service DESTINATION /usr/libexec/)
 
 add_executable(test-auth test/test-auth.cpp src/samba-config-interface.cpp src/samba-config-interface.h)
 target_link_libraries(test-auth Qt5::Core Qt5::DBus ${Polkit_LIBRARIES} ${GIO_LIBRARIES})
