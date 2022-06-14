@@ -1,0 +1,27 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="org.ukui.samba.config">
+        <method name="init">
+            <arg type="b" direction="out"/>
+            <arg name="name" type="s" direction="in"/>
+            <arg name="pid" type="i" direction="in"/>
+            <arg name="uid" type="i" direction="in"/>
+        </method>
+        <method name="isSmbdLaunched">
+            <arg type="b" direction="out"/>
+        </method>
+        <method name="userIsInSambaGroup">
+            <arg type="b" direction="out"/>
+        </method>
+        <method name="addUserInGroup">
+            <arg type="b" direction="out"/>
+        </method>
+        <method name="hasPasswd">
+            <arg type="b" direction="out"/>
+        </method>
+        <method name="setPasswd">
+            <arg name="passwd" type="s" direction="in"/>
+            <arg type="b" direction="out"/>
+        </method>
+    </interface>
+</node>

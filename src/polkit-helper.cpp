@@ -1,7 +1,5 @@
 #include "polkit-helper.h"
 
-#include "global.h"
-
 #include <polkit/polkit.h>
 
 #include <QDebug>

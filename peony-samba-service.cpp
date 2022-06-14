@@ -1,38 +1,49 @@
 #include <QCoreApplication>
 
 #include <gio/gio.h>
-#include "samba-config.h"
+#include "src/samba-config.h"
 
 #include <QDebug>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 
 static GDBusObjectManagerServer* manager = NULL;
 
-static void on_bus_acquired (GDBusConnection* conn, const char* name, gpointer udata);
+static bool registManager (SambaConfig& sc);
 
 int main (int argc, char* argv[])
 {
+    int ret = -1;
     QCoreApplication app(argc, argv);
-    guint id = g_bus_own_name (G_BUS_TYPE_SESSION, DBUS_NAME, G_BUS_NAME_OWNER_FLAGS_NONE, on_bus_acquired, NULL, NULL, NULL, NULL);
 
-    int ret = app.exec();
-
-    g_bus_unwatch_name(id);
+    SambaConfig* sc = const_cast<SambaConfig*>(SambaConfig::getInstance());
+    if (registManager(*sc)) {
+        ret = app.exec();
+    }
 
     return ret;
 }
 
 
-static void on_bus_acquired (GDBusConnection* conn, const char* name, gpointer udata)
+static bool registManager (SambaConfig& sc)
 {
-    manager = g_dbus_object_manager_server_new (DBUS_PATH);
-    if (manager) {
-        g_autoptr(SambaConfigSkeleton) smbConfig = samba_config_skeleton_new(DBUS_PATH "/config");
-        if (G_IS_DBUS_OBJECT_SKELETON(smbConfig)) {
-            g_dbus_object_manager_server_export (manager, G_DBUS_OBJECT_SKELETON(smbConfig));
-        } else {
-            qWarning() << "G_IS_DBUS_OBJECT_SKELETON(smbConfig): false!";
-        }
+    QDBusConnection bus = QDBusConnection::systemBus();
+    if (bus.interface()->isServiceRegistered(DBUS_NAME)) {
+        qWarning() << "dbus: " DBUS_NAME " already regist!";
+        return false;
     }
 
-    g_dbus_object_manager_server_set_connection (manager, conn);
+    if (!bus.registerService(DBUS_NAME)) {
+        qWarning() << "dbus: " DBUS_NAME " regist failed!";
+        return false;
+    }
+
+    if (!bus.registerObject(DBUS_PATH, DBUS_NAME, static_cast<QObject*>(&sc), QDBusConnection::ExportNonScriptableSlots|QDBusConnection::ExportNonScriptableSignals)) {
+        qWarning() << "dbus: " DBUS_NAME " regist object failed!";
+        return false;
+    }
+
+    qDebug() << "dbus: " DBUS_NAME " regist successed!";
+
+    return true;
 }
